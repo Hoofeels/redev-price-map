@@ -37,9 +37,9 @@ export const SEOUL_DONG_CENTROID: Record<string, LatLng> = {
  * (zoneId → 좌표; geocode 스크립트가 최우선 적용). VWorld/Kakao로 교차검증한 값.
  */
 export const ZONE_COORD_OVERRIDE: Record<string, LatLng> = {
-  "seoul-11350-87": { lat: 37.66382, lng: 127.07083 }, // 상계동 154-3 (주소필드 '공릉동' 오류 → 이름 기준)
-  "seoul-11350-91": { lat: 37.68211, lng: 127.07682 }, // 상계2재정비촉진구역 (상계뉴타운, NE 상계동)
-  "seoul-11350-92": { lat: 37.68227, lng: 127.07731 }, // 상계1재정비촉진구역
+  "seoul-11350-87": { lat: 37.66391, lng: 127.07078 }, // 상계동 154-3 (SHP centroid)
+  "seoul-11350-91": { lat: 37.6718, lng: 127.07937 }, // 상계2재정비촉진구역 (SHP centroid; Kakao는 ~1km 오차)
+  "seoul-11350-92": { lat: 37.67352, lng: 127.08281 }, // 상계1구역=자력6구역 (SHP centroid)
 };
 
 /**
