@@ -2,6 +2,7 @@
 
 import type { RedevelopmentZone } from "@/lib/types";
 import { computeZoneStats, formatManwon } from "@/lib/stats";
+import { getAsking } from "@/lib/asking";
 
 interface ZoneDetailPanelProps {
   zone: RedevelopmentZone | null;
@@ -19,6 +20,10 @@ export default function ZoneDetailPanel({ zone, onClose }: ZoneDetailPanelProps)
 
   const stats = computeZoneStats(zone.transactions);
   const txs = [...zone.transactions].sort((a, b) => b.date.localeCompare(a.date));
+  const asking = getAsking(zone.id);
+  const askingArticles = asking
+    ? [...asking.articles].sort((a, b) => (b.confirmYmd ?? "").localeCompare(a.confirmYmd ?? ""))
+    : [];
 
   return (
     <aside className="flex h-full w-full flex-col overflow-y-auto bg-white">
@@ -97,6 +102,47 @@ export default function ZoneDetailPanel({ zone, onClose }: ZoneDetailPanelProps)
           </table>
         )}
       </section>
+
+      {/* 네이버 호가(참고) — 로컬 best-effort, 실거래가 아님 */}
+      {asking && askingArticles.length > 0 && (
+        <section className="border-t border-gray-200 p-4">
+          <h3 className="mb-1 text-sm font-semibold text-gray-700">
+            호가{" "}
+            <span className="text-xs font-normal text-gray-400">
+              참고 · 네이버부동산{asking.complexName ? ` ${asking.complexName}` : ""} · {asking.asOf} 기준
+            </span>
+          </h3>
+          <p className="mb-2 text-xs text-amber-600">
+            ※ 매도 희망가(호가)이며 실거래가 아닙니다. 참고용.
+          </p>
+          <table className="w-full text-left text-sm">
+            <thead>
+              <tr className="border-b border-gray-200 text-xs text-gray-500">
+                <th className="py-1">유형</th>
+                <th className="py-1">면적</th>
+                <th className="py-1 text-right">층</th>
+                <th className="py-1 text-right">호가</th>
+                <th className="py-1 text-right">확인일</th>
+              </tr>
+            </thead>
+            <tbody>
+              {askingArticles.map((a, i) => (
+                <tr key={`${a.confirmYmd}-${i}`} className="border-b border-gray-100">
+                  <td className="py-1.5">
+                    <span className="rounded bg-emerald-100 px-1.5 py-0.5 text-xs text-emerald-800">
+                      {a.tradeType}
+                    </span>
+                  </td>
+                  <td className="py-1.5 text-gray-700">{a.areaName ?? "-"}</td>
+                  <td className="py-1.5 text-right text-gray-700">{a.floorInfo ?? "-"}</td>
+                  <td className="py-1.5 text-right font-medium text-gray-900">{a.priceText}</td>
+                  <td className="py-1.5 text-right text-gray-400">{a.confirmYmd ?? "-"}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </section>
+      )}
     </aside>
   );
 }

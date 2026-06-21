@@ -10,6 +10,7 @@
     "test": "vitest run",
     "scrape:seoul": "tsx scripts/scrapeSeoul.ts",
     "scrape:gyeonggi": "tsx --env-file=.env.local scripts/scrapeGyeonggi.ts",
+    "scrape:naver": "tsx scripts/scrapeNaver.ts",
     "geocode": "tsx --env-file=.env.local scripts/geocode.ts",
     "test:e2e": "playwright test"
   },
