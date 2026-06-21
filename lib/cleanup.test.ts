@@ -29,17 +29,26 @@ describe("parseBsnsListRows", () => {
 });
 
 describe("mapStage", () => {
-  it("포함 단계만 매핑", () => {
+  it("포함 단계 매핑(정비구역지정~이주·철거)", () => {
+    expect(mapStage("정비구역지정")).toBe("정비구역지정");
+    expect(mapStage("추진위원회승인")).toBe("추진위원회");
+    expect(mapStage("사업시행자지정")).toBe("사업시행자지정");
     expect(mapStage("조합설립인가")).toBe("조합설립인가");
     expect(mapStage("사업시행인가")).toBe("사업시행인가");
     expect(mapStage("관리처분인가")).toBe("관리처분인가");
     expect(mapStage("철거")).toBe("이주·철거");
   });
-  it("제외 단계는 null", () => {
+  it("사업시행자지정 vs 사업시행인가 구분(substring 겹침)", () => {
+    expect(mapStage("사업시행자지정")).toBe("사업시행자지정");
+    expect(mapStage("사업시행인가")).toBe("사업시행인가");
+  });
+  it("범위 밖 단계는 null", () => {
+    expect(mapStage("정비계획수립")).toBeNull();
+    expect(mapStage("안전진단")).toBeNull();
     expect(mapStage("준공인가")).toBeNull();
     expect(mapStage("착공")).toBeNull();
-    expect(mapStage("추진위원회승인")).toBeNull();
     expect(mapStage("조합해산")).toBeNull();
+    expect(mapStage("조합청산")).toBeNull();
   });
 });
 

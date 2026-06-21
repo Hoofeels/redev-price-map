@@ -23,14 +23,18 @@ export interface RawBsns {
   stageText: string;
 }
 
-/** 진행단계 텍스트 → StageName. 스펙 포함범위(조합설립인가~철거)만 매핑, 그 외 null. */
+/** 진행단계 텍스트 → StageName. 포함범위(정비구역지정~이주·철거)만 매핑, 그 외 null.
+ *  substring 겹침 주의: '사업시행자지정'을 '사업시행인가'보다 먼저 검사. */
 export function mapStage(text: string): StageName | null {
   const t = text.replace(/\s+/g, "");
-  if (t.includes("조합설립인가") || t.includes("주민대표회의")) return "조합설립인가";
+  if (t.includes("관리처분")) return "관리처분인가";
+  if (t.includes("사업시행자지정")) return "사업시행자지정";
   if (t.includes("사업시행인가")) return "사업시행인가";
-  if (t.includes("관리처분인가")) return "관리처분인가";
+  if (t.includes("조합설립") || t.includes("주민대표회의")) return "조합설립인가";
+  if (t.includes("추진위")) return "추진위원회";
+  if (t.includes("정비구역지정")) return "정비구역지정";
   if (t.includes("철거") || t.includes("이주")) return "이주·철거";
-  // 정비계획수립/안전진단/정비구역지정/추진위/착공/분양/준공/이전고시/조합해산/청산 → 제외
+  // 정비계획수립/안전진단/착공/분양/준공/이전고시/조합해산/조합청산 → 제외(스펙 범위 밖)
   return null;
 }
 

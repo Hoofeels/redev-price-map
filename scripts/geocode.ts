@@ -48,8 +48,8 @@ async function main() {
     const zones = JSON.parse(readFileSync(path, "utf8")) as RedevelopmentZone[];
 
     for (const z of zones) {
-      // 0) 검증된 override 최우선(부정확 대표지번 보정)
-      const ov = ZONE_COORD_OVERRIDE[z.id];
+      // 0) 검증된 override 최우선(부정확 대표지번 보정) — 이름 부분일치
+      const ov = ZONE_COORD_OVERRIDE.find((o) => z.name.includes(o.match));
       if (ov) {
         z.lat = ov.lat;
         z.lng = ov.lng;

@@ -42,14 +42,14 @@ export default function FilterBar({ filter, onChange, resultCount }: FilterBarPr
         </select>
       </Field>
 
-      <Field label="단계">
+      <Field label="진행단계(이상)">
         <select
           className="rounded border border-gray-300 px-2 py-1 text-sm"
           value={filter.stage}
           onChange={(e) => set({ stage: e.target.value as ZoneFilter["stage"] })}
         >
           {STAGE_OPTIONS.map((o) => (
-            <option key={o} value={o}>{o}</option>
+            <option key={o} value={o}>{o === "전체" ? "전체(전단계)" : `${o} 이상`}</option>
           ))}
         </select>
       </Field>

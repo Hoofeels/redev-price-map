@@ -2,6 +2,7 @@ import seoulData from "@/data/seoul-zones.json";
 import gyeonggiData from "@/data/gyeonggi-zones.json";
 import boundaryData from "@/data/zone-boundaries.json";
 import { MOCK_ZONES } from "./mockData";
+import { STAGE_ORDER } from "./types";
 import type { RedevelopmentZone, ZoneFilter } from "./types";
 
 const seoulZones = seoulData as unknown as RedevelopmentZone[];
@@ -36,7 +37,11 @@ export function filterZones(
   return zones.filter((z) => {
     if (filter.sido !== "전체" && z.sido !== filter.sido) return false;
     if (filter.projectType !== "전체" && z.projectType !== filter.projectType) return false;
-    if (filter.stage !== "전체" && z.stage !== filter.stage) return false;
+    // 단계: "이 단계 이상"(STAGE_ORDER 순서)으로 필터
+    if (filter.stage !== "전체") {
+      const sel = STAGE_ORDER.indexOf(filter.stage);
+      if (sel >= 0 && STAGE_ORDER.indexOf(z.stage) < sel) return false;
+    }
     if (q && !`${z.name} ${z.sigungu} ${z.representativeAddress}`.includes(q)) return false;
     return true;
   });

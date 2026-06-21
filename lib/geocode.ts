@@ -33,14 +33,14 @@ export const SEOUL_DONG_CENTROID: Record<string, LatLng> = {
 };
 
 /**
- * 정보몽땅 대표지번이 부정확/오류라 지오코딩이 틀리는 구역의 검증된 좌표 override.
- * (zoneId → 좌표; geocode 스크립트가 최우선 적용). VWorld/Kakao로 교차검증한 값.
+ * 정보몽땅 대표지번이 부정확/오류라 지오코딩이 틀리는 구역의 검증된 좌표 override(SHP centroid).
+ * zone.name 부분일치로 적용 — 인덱스 기반 zoneId는 재수집 시 바뀌므로 이름으로 매칭.
  */
-export const ZONE_COORD_OVERRIDE: Record<string, LatLng> = {
-  "seoul-11350-87": { lat: 37.66391, lng: 127.07078 }, // 상계동 154-3 (SHP centroid)
-  "seoul-11350-91": { lat: 37.6718, lng: 127.07937 }, // 상계2재정비촉진구역 (SHP centroid; Kakao는 ~1km 오차)
-  "seoul-11350-92": { lat: 37.67352, lng: 127.08281 }, // 상계1구역=자력6구역 (SHP centroid)
-};
+export const ZONE_COORD_OVERRIDE: Array<LatLng & { match: string }> = [
+  { match: "상계1재정비촉진", lat: 37.67352, lng: 127.08281 }, // 상계1구역=자력6구역
+  { match: "상계2재정비촉진", lat: 37.6718, lng: 127.07937 }, // 상계2재정비촉진구역 (Kakao ~1km 오차)
+  { match: "상계동 154-3", lat: 37.66391, lng: 127.07078 }, // 주소필드 '공릉동' 오기
+];
 
 /**
  * 주소의 법정동을 동 중심 테이블에서 찾아, 구역 id 기반 결정적 지터를 더해 반환.
