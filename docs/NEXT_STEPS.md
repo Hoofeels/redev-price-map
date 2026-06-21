@@ -82,3 +82,25 @@ npm run scrape:naver -- --zone=seoul-11170-14   # 특정 구역만
 - 공개 배포 시 호가 재호스팅은 ToS 위반 → 로컬 분석/조회용으로만.
 
 **해소(자동화):** 매물명 정규화·지역 가드로 동명이단지 오매칭 방지(예: "산호"→칠곡산호한양 걸러 용산 산호=759 채택). 미해소: 단지명이 네이버와 다른 구역(예: "강변강서")은 매칭 실패 → 수동 complexNo 매핑으로 보완 가능.
+
+---
+
+## 경계 폴리곤(바운더리) — `download:boundaries` + `scrape:boundaries` (서울, 로컬 전용)
+
+지도에 마커뿐 아니라 **정비구역 경계 폴리곤** 표시. 서울 열린데이터광장 OA-20957(의제처리구역) SHP 기반.
+
+**사용:**
+```
+npm run download:boundaries    # OA-20957 SHP 다운로드+압축해제 (temp 폴더, Playwright)
+npm run scrape:boundaries      # SHP→정비구역 폴리곤 추출→마커 공간조인→data/zone-boundaries.json
+```
+→ `lib/zones.ts`가 로드 시 zone에 병합, `MapView`가 `Polygon` 렌더(이미 지원).
+
+**동작:** SHP에서 `ATRB_SE=UQ12*`(정비사업)만 필터 → EPSG:5174→WGS84(proj4) 변환 → **마커 point-in-polygon(가장 작은 포함 폴리곤)**으로 구역 매칭(이름매칭은 동명이구역 오매칭 위험으로 미사용) → 거리 데시메이션 단순화.
+
+**커버리지:** 서울 **198/257 구역**(공간조인). 미매칭은 마커만(폴리곤 없음). **경기는 미지원**(SHP 출처 없음).
+
+**⚠️ ToS / 커밋 주의:**
+- 공공누리 **4유형**(출처표시+상업금지+변경금지) → **재배포 제한**. `data/zone-boundaries.json`은 **빈 `{}`로 커밋** + `git update-index --skip-worktree`로 로컬 변경 추적 제외. 공개 사이트 재호스팅 금지.
+- SHP는 temp 폴더(미커밋). 의존성: `shapefile`, `proj4`(devDeps).
+- 미해소: 경기 경계(출처 부재), 서울 미매칭 59구역(마커가 폴리곤 밖이거나 SHP 미수록).
