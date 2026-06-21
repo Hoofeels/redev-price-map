@@ -1398,14 +1398,14 @@
     "sigungu": "노원구",
     "projectType": "재개발",
     "stage": "조합설립인가",
-    "lat": 37.624619835371526,
-    "lng": 127.06872635910027,
+    "lat": 37.66382,
+    "lng": 127.07083,
     "representativeAddress": "서울 노원구 공릉동 154-3",
     "representativeComplex": null,
     "dataAsOf": "2026-06-05",
     "source": "정보몽땅(cleanup.seoul.go.kr)",
     "transactions": [],
-    "geocoded": false
+    "geocoded": true
   },
   {
     "id": "seoul-11350-88",
@@ -1462,14 +1462,14 @@
     "sigungu": "노원구",
     "projectType": "재개발",
     "stage": "사업시행인가",
-    "lat": 37.657785998329516,
-    "lng": 127.0629741976615,
+    "lat": 37.68211,
+    "lng": 127.07682,
     "representativeAddress": "서울 노원구 상계동 자력2구역 17블럭 1롯트",
     "representativeComplex": null,
     "dataAsOf": "2026-06-05",
     "source": "정보몽땅(cleanup.seoul.go.kr)",
     "transactions": [],
-    "geocoded": false
+    "geocoded": true
   },
   {
     "id": "seoul-11350-92",
@@ -1478,14 +1478,14 @@
     "sigungu": "노원구",
     "projectType": "재개발",
     "stage": "관리처분인가",
-    "lat": 37.659893947003404,
-    "lng": 127.0659918655604,
+    "lat": 37.68227,
+    "lng": 127.07731,
     "representativeAddress": "서울 노원구 상계동 자력6구역 8블럭 9롯트",
     "representativeComplex": null,
     "dataAsOf": "2026-06-05",
     "source": "정보몽땅(cleanup.seoul.go.kr)",
     "transactions": [],
-    "geocoded": false
+    "geocoded": true
   },
   {
     "id": "seoul-11350-93",

@@ -7,7 +7,13 @@
  */
 import { readFileSync, writeFileSync, existsSync } from "node:fs";
 import { join } from "node:path";
-import { cleanAddressForGeocode, approxDongCentroid, geocodeBest, type LatLng } from "../lib/geocode";
+import {
+  cleanAddressForGeocode,
+  approxDongCentroid,
+  geocodeBest,
+  ZONE_COORD_OVERRIDE,
+  type LatLng,
+} from "../lib/geocode";
 import type { RedevelopmentZone } from "../lib/types";
 
 const DATA = join(process.cwd(), "data");
@@ -42,6 +48,15 @@ async function main() {
     const zones = JSON.parse(readFileSync(path, "utf8")) as RedevelopmentZone[];
 
     for (const z of zones) {
+      // 0) 검증된 override 최우선(부정확 대표지번 보정)
+      const ov = ZONE_COORD_OVERRIDE[z.id];
+      if (ov) {
+        z.lat = ov.lat;
+        z.lng = ov.lng;
+        z.geocoded = true;
+        ok++;
+        continue;
+      }
       const cleaned = cleanAddressForGeocode(z.representativeAddress);
       let coord: LatLng | null;
       // 캐시된 '성공'만 재사용. 실패(null)는 Kakao 폴백이 새로 생겼을 수 있어 재시도.

@@ -33,6 +33,16 @@ export const SEOUL_DONG_CENTROID: Record<string, LatLng> = {
 };
 
 /**
+ * 정보몽땅 대표지번이 부정확/오류라 지오코딩이 틀리는 구역의 검증된 좌표 override.
+ * (zoneId → 좌표; geocode 스크립트가 최우선 적용). VWorld/Kakao로 교차검증한 값.
+ */
+export const ZONE_COORD_OVERRIDE: Record<string, LatLng> = {
+  "seoul-11350-87": { lat: 37.66382, lng: 127.07083 }, // 상계동 154-3 (주소필드 '공릉동' 오류 → 이름 기준)
+  "seoul-11350-91": { lat: 37.68211, lng: 127.07682 }, // 상계2재정비촉진구역 (상계뉴타운, NE 상계동)
+  "seoul-11350-92": { lat: 37.68227, lng: 127.07731 }, // 상계1재정비촉진구역
+};
+
+/**
  * 주소의 법정동을 동 중심 테이블에서 찾아, 구역 id 기반 결정적 지터를 더해 반환.
  * 같은 동의 여러 구역이 한 점에 겹치지 않도록 ±~0.003° 분산. 미등록 동이면 null.
  */
