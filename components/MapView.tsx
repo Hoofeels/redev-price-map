@@ -8,8 +8,11 @@ import {
   CircleMarker,
   Polygon,
   Tooltip,
+  GeoJSON,
 } from "react-leaflet";
+import type { FeatureCollection } from "geojson";
 import type { ProjectType, RedevelopmentZone } from "@/lib/types";
+import sigunguBoundaries from "@/data/sigungu-boundaries.json";
 
 const TYPE_COLOR: Record<ProjectType, string> = {
   재개발: "#2563eb", // blue
@@ -34,9 +37,15 @@ export default function MapView({ zones, selectedId, onSelect }: MapViewProps) {
       style={{ height: "100%", width: "100%" }}
     >
       <TileLayer
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>'
+        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a> · 행정경계 &copy; KOSTAT/POPONG (CC BY 4.0)'
         url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
         subdomains="abcd"
+      />
+      {/* 시군구 행정경계(서울·경기) — 방향 파악용. interactive=false로 마커 클릭을 막지 않음 */}
+      <GeoJSON
+        data={sigunguBoundaries as unknown as FeatureCollection}
+        interactive={false}
+        style={{ color: "#64748b", weight: 1.2, opacity: 0.5, fill: false, fillOpacity: 0 }}
       />
       {zones.map((z) => {
         const color = TYPE_COLOR[z.projectType];

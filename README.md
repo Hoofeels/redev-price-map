@@ -38,6 +38,7 @@ MOLIT_API_KEY=발급받은_서비스키
 | 서울 정비사업 구역 | 정보몽땅(cleanup.seoul.go.kr) | 공개 데이터 |
 | 경기 정비사업 구역 | 경기데이터드림(data.gg.go.kr) | 공개 OpenAPI |
 | 실거래가 | 국토교통부(data.go.kr) | 런타임 API 조회 |
+| 시군구 행정경계 | KOSTAT / [southkorea-maps](https://github.com/southkorea/southkorea-maps)(POPONG) | CC BY 4.0 (출처표시) |
 
 > **⚠️ 로컬 전용 데이터**
 > 네이버부동산 호가(`data/naver-asking.json`)와 서울 정비구역 경계 폴리곤(`data/zone-boundaries.json`, 공공누리 4유형)은
