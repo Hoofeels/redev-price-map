@@ -56,21 +56,44 @@ export async function GET(request: Request) {
   const kinds: MolitKind[] =
     zone.projectType === "재건축" ? ["apt"] : ["rh", "sh", "apt"];
 
+  // (종류 × 월) 최대 18회 호출. 순차로 하면 30초+라 병렬화하되,
+  // data.go.kr 폭주(레이트리밋)로 인한 데이터 누락을 막기 위해 동시 6개로 제한.
+  // 각 (종류,월)은 독립 시도 — 일부 실패가 전체를 막지 않는다.
+  const jobs = kinds.flatMap((kind) =>
+    dealMonths.map((dealYmd) => ({ kind, dealYmd })),
+  );
+  type JobResult =
+    | { ok: true; kind: MolitKind; trades: Transaction[] }
+    | { ok: false; kind: MolitKind; error: string };
+
+  const CONCURRENCY = 6;
+  const results: JobResult[] = [];
+  for (let i = 0; i < jobs.length; i += CONCURRENCY) {
+    const batch = jobs.slice(i, i + CONCURRENCY);
+    const settled = await Promise.all(
+      batch.map(async ({ kind, dealYmd }): Promise<JobResult> => {
+        try {
+          const trades = await fetchMolitTrades(kind, { serviceKey, lawdCd, dealYmd });
+          return { ok: true, kind, trades };
+        } catch (e) {
+          return { ok: false, kind, error: e instanceof Error ? e.message : "fetch error" };
+        }
+      }),
+    );
+    results.push(...settled);
+  }
+
   const all: Transaction[] = [];
   const failedKinds = new Set<string>();
   let anySuccess = false;
   let lastError: string | null = null;
-  // 월별 실패가 전체를 막지 않도록 각 (종류,월) 독립 시도
-  for (const kind of kinds) {
-    for (const dealYmd of dealMonths) {
-      try {
-        const trades = await fetchMolitTrades(kind, { serviceKey, lawdCd, dealYmd });
-        all.push(...trades);
-        anySuccess = true;
-      } catch (e) {
-        failedKinds.add(kind);
-        lastError = e instanceof Error ? e.message : "fetch error";
-      }
+  for (const r of results) {
+    if (r.ok) {
+      all.push(...r.trades);
+      anySuccess = true;
+    } else {
+      failedKinds.add(r.kind);
+      lastError = r.error;
     }
   }
 
